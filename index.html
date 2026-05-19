@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow,noarchive,noimageindex" />
+    <meta name="googlebot" content="noindex,nofollow,noarchive,noimageindex" />
+    <title>FuseNav - Unified Perception for Object Navigation</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #151816;
+        --muted: #66716b;
+        --line: #d8ded9;
+        --paper: #f7f8f6;
+        --panel: #ffffff;
+        --green: #1f7a5a;
+        --green-dark: #155940;
+        --orange: #d95532;
+        --blue: #2d5b8a;
+        --gold: #f2b84b;
+        --shadow: 0 20px 45px rgba(21, 24, 22, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: var(--paper);
+        letter-spacing: 0;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .hero {
+        position: relative;
+        min-height: auto;
+        display: grid;
+        align-items: start;
+        background: var(--panel);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .hero-inner {
+        width: min(900px, calc(100% - 36px));
+        margin: 0 auto;
+        padding: 46px 0 44px;
+        color: var(--ink);
+        text-align: center;
+      }
+
+      .eyebrow {
+        margin-bottom: 12px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(34px, 5vw, 46px);
+        line-height: 1.12;
+        letter-spacing: 0;
+      }
+
+      .project-subtitle {
+        margin: 10px 0 0;
+        color: #2f3832;
+        font-size: clamp(18px, 2.1vw, 24px);
+        line-height: 1.35;
+        font-weight: 700;
+      }
+
+      .authors {
+        margin: 16px auto 0;
+        color: #2f3832;
+        font-size: 15px;
+        line-height: 1.55;
+        font-weight: 650;
+      }
+
+      .authors a {
+        text-decoration: none;
+      }
+
+      .affiliations {
+        margin: 8px auto 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+        font-weight: 550;
+      }
+
+      .affiliations span {
+        display: block;
+      }
+
+      .hero-copy {
+        max-width: 790px;
+        margin: 18px auto 0;
+        color: #3f4944;
+        font-size: 16px;
+        line-height: 1.6;
+        font-weight: 500;
+      }
+
+      .hero-meta {
+        margin-top: 16px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+        font-weight: 650;
+      }
+
+      .hero-meta span {
+        display: inline;
+      }
+
+      .hero-meta span + span::before {
+        content: " · ";
+      }
+
+      .hero-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .hero-links a {
+        color: var(--green);
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 800;
+      }
+
+      section {
+        padding: clamp(52px, 7vw, 92px) clamp(18px, 4vw, 58px);
+      }
+
+      .section-inner {
+        width: min(1180px, 100%);
+        margin: 0 auto;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(0, 0.8fr) minmax(280px, 0.9fr);
+        gap: 36px;
+        align-items: end;
+        margin-bottom: 34px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: clamp(34px, 5vw, 60px);
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        margin: 0;
+        color: #4f5a54;
+        font-size: 17px;
+        line-height: 1.65;
+      }
+
+      .metric.accent {
+        background: var(--green-dark);
+      }
+
+      .demo-player {
+        overflow: hidden;
+        max-width: 1120px;
+        margin: 0 auto;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      .demo-stage {
+        position: relative;
+        background: #0f1110;
+      }
+
+      .demo-player video {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1280 / 696;
+        object-fit: contain;
+        background: #0f1110;
+      }
+
+      .demo-arrow {
+        position: absolute;
+        top: 50%;
+        z-index: 2;
+        display: grid;
+        width: 48px;
+        height: 48px;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.84);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+        cursor: pointer;
+        transform: translateY(-50%);
+      }
+
+      .demo-arrow:hover,
+      .demo-arrow:focus-visible {
+        border-color: #ffffff;
+        background: #ffffff;
+        outline: 2px solid rgba(31, 122, 90, 0.28);
+        outline-offset: 2px;
+      }
+
+      .demo-arrow-left {
+        left: 18px;
+      }
+
+      .demo-arrow-right {
+        right: 18px;
+      }
+
+      .arrow-shape {
+        display: block;
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+      }
+
+      .arrow-shape.left {
+        margin-left: -3px;
+        border-right: 12px solid var(--green-dark);
+      }
+
+      .arrow-shape.right {
+        margin-right: -3px;
+        border-left: 12px solid var(--green-dark);
+      }
+
+      .demo-body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        padding: 18px;
+        align-items: center;
+      }
+
+      .demo-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 850;
+      }
+
+      .demo-count {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .demo-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 18px 18px;
+      }
+
+      .demo-dots {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+      }
+
+      .demo-dot {
+        width: 10px;
+        height: 10px;
+        padding: 0;
+        border: 1px solid #a9b5ac;
+        border-radius: 50%;
+        background: #ffffff;
+        cursor: pointer;
+      }
+
+      .demo-dot:hover,
+      .demo-dot:focus-visible {
+        border-color: var(--green);
+        outline: none;
+      }
+
+      .demo-dot.is-active {
+        border-color: var(--green-dark);
+        background: var(--green);
+        box-shadow: 0 0 0 4px #dbece4;
+      }
+
+      .pill {
+        white-space: nowrap;
+        padding: 7px 8px;
+        border-radius: 6px;
+        background: #eef5f1;
+        color: var(--green-dark);
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .pill.orange {
+        background: #fff0eb;
+        color: var(--orange);
+      }
+
+      .pill.blue {
+        background: #edf3fa;
+        color: var(--blue);
+      }
+
+      .results {
+        background: #fff;
+      }
+
+      .table-wrap {
+        overflow: hidden;
+        max-width: 980px;
+        margin: 0 auto;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: var(--shadow);
+      }
+
+      .result-table-image {
+        display: block;
+        width: 100%;
+        max-width: 920px;
+        height: auto;
+        margin: 0 auto;
+        background: #fff;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 980px;
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: middle;
+      }
+
+      th {
+        background: #edf2ef;
+        color: #344039;
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .group-row td {
+        background: #f6f8f6;
+        color: #536057;
+        font-size: 12px;
+        font-style: italic;
+        font-weight: 800;
+        text-transform: none;
+      }
+
+      .ours-row td {
+        background: #eff8f3;
+        font-weight: 850;
+      }
+
+      .number {
+        font-variant-numeric: tabular-nums;
+        font-weight: 850;
+      }
+
+      .best {
+        color: var(--green-dark);
+      }
+
+      .second {
+        text-decoration: underline;
+        text-underline-offset: 0.18em;
+      }
+
+      .mark {
+        display: inline-grid;
+        min-width: 18px;
+        place-items: center;
+        font-weight: 900;
+      }
+
+      .mark.yes {
+        color: var(--green-dark);
+      }
+
+      .mark.no {
+        color: var(--orange);
+      }
+
+      footer {
+        padding: 34px clamp(18px, 4vw, 58px);
+        border-top: 1px solid var(--line);
+        background: #fff;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      footer .section-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 880px) {
+        .section-head {
+          grid-template-columns: 1fr;
+        }
+
+        .demo-body {
+          grid-template-columns: 1fr;
+        }
+
+        .demo-count {
+          justify-self: start;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .hero-inner {
+          width: min(100% - 28px, 1180px);
+          padding: 34px 0 36px;
+        }
+
+        h1 {
+          font-size: 46px;
+        }
+
+        section {
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+
+        .demo-arrow {
+          width: 40px;
+          height: 40px;
+        }
+
+        .demo-arrow-left {
+          left: 10px;
+        }
+
+        .demo-arrow-right {
+          right: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero" aria-label="FuseNav project overview">
+        <div class="hero-inner">
+          <h1>FuseNav</h1>
+          <p class="project-subtitle">Unified Perception for Zero-Shot Object Navigation</p>
+          <div class="authors" aria-label="Authors">
+            Guanlin Liu<sup>1</sup>,
+            Shaobin Lin<sup>1</sup>,
+            Zeying Gong<sup>2</sup>,
+            Junjie Hu<sup>1,*</sup>
+          </div>
+          <div class="affiliations" aria-label="Affiliations">
+            <span><sup>1</sup>The Chinese University of Hong Kong, Shenzhen</span>
+            <span><sup>2</sup>The Hong Kong University of Science and Technology (Guangzhou)</span>
+            <span><sup>*</sup>Corresponding author</span>
+          </div>
+          <p class="hero-copy">
+            A C-RADIO-centered zero-shot ObjectNav system with unified scene
+            scoring, detection, segmentation, and geometry-aware frontier
+            planning. The paper is in preparation, targeting an IEEE RA-L
+            submission.
+          </p>
+          <div class="hero-meta" aria-label="Project status">
+            <span>Training-free zero-shot navigation</span>
+            <span>C-RADIOv4 + SigLIP2 + SAM3</span>
+          </div>
+          <nav class="hero-links" aria-label="Page navigation">
+            <a href="#results">Results</a>
+            <a href="#demos">Demos</a>
+          </nav>
+        </div>
+      </section>
+
+      <section id="results" class="results" aria-label="Benchmark comparison">
+        <div class="section-inner">
+          <div class="section-head">
+            <h2>Success Rate Comparison</h2>
+          </div>
+
+          <div class="table-wrap">
+            <img
+              class="result-table-image"
+              src="assets/objectnav_sota_sr_table_homepage.png?v=20260519d"
+              alt="Success rate comparison table for ObjectNav benchmarks"
+            />
+            <!-- Source table kept in HTML only as a fallback data copy; the visible page embeds the rendered LaTeX table image above. -->
+            <div hidden>
+            <table>
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>TF</th>
+                  <th>ZS</th>
+                  <th>Venue</th>
+                  <th>HM3D-v2 SR</th>
+                  <th>MP3D-v1 SR</th>
+                  <th>HM3D-OVON val_unseen SR</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="group-row">
+                  <td colspan="7">Methods requiring training / non-training-free</td>
+                </tr>
+                <tr>
+                  <td>SemExp</td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td>NeurIPS 2020</td>
+                  <td>-</td>
+                  <td class="number">36.0</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>PONI</td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td>CVPR 2022</td>
+                  <td>-</td>
+                  <td class="number">31.8</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>ZSON</td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>NeurIPS 2022</td>
+                  <td>-</td>
+                  <td class="number">15.3</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>SGM / Imagine Before Go</td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>CVPR 2024</td>
+                  <td>-</td>
+                  <td class="number">37.7</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>DAgRL+OD</td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td>IROS 2024</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td class="number">37.1</td>
+                </tr>
+                <tr>
+                  <td>Uni-NaVid</td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>RSS 2025</td>
+                  <td class="number">73.7</td>
+                  <td>-</td>
+                  <td class="number">39.5</td>
+                </tr>
+                <tr>
+                  <td>MTU3D</td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>ICCV 2025</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td class="number">40.8</td>
+                </tr>
+                <tr>
+                  <td>FiLM-Nav</td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td>arXiv 2025</td>
+                  <td class="number">77.0</td>
+                  <td>-</td>
+                  <td class="number">40.8</td>
+                </tr>
+                <tr>
+                  <td>FOM-Nav</td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td>arXiv 2025</td>
+                  <td class="number">75.8</td>
+                  <td class="number">35.0</td>
+                  <td class="number">38.1</td>
+                </tr>
+                <tr>
+                  <td>OVSegDT</td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>CVPR 2026</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td class="number">44.7</td>
+                </tr>
+                <tr>
+                  <td>TrajRAG</td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>CVPR 2026</td>
+                  <td class="number">78.1</td>
+                  <td class="number">42.6</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>CompassNav</td>
+                  <td><span class="mark no">&times;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>ICLR 2026</td>
+                  <td class="number">61.6</td>
+                  <td class="number">42.0</td>
+                  <td class="number">43.5</td>
+                </tr>
+                <tr class="group-row">
+                  <td colspan="7">Training-free zero-shot methods</td>
+                </tr>
+                <tr>
+                  <td>CoW / CLIP on Wheels</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>CVPR 2023</td>
+                  <td>-</td>
+                  <td class="number">9.2</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>ESC</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>ICML 2023</td>
+                  <td>-</td>
+                  <td class="number">28.7</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>L3MVN</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>IROS 2023</td>
+                  <td class="number">36.3</td>
+                  <td class="number">34.9</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>VLFM</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>ICRA 2024</td>
+                  <td class="number">63.6</td>
+                  <td class="number">36.4</td>
+                  <td class="number">35.2</td>
+                </tr>
+                <tr>
+                  <td>SG-Nav</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>NeurIPS 2024</td>
+                  <td class="number">49.6</td>
+                  <td class="number">40.2</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>InstructNav</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>CoRL 2024</td>
+                  <td class="number">58.0</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>UniGoal</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>CVPR 2025</td>
+                  <td>-</td>
+                  <td class="number">41.0</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>ApexNav</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>IEEE RA-L 2025</td>
+                  <td class="number">76.2</td>
+                  <td class="number">39.2</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>WMNav</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>IROS 2025</td>
+                  <td class="number">72.2</td>
+                  <td class="number">45.4</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>RATE-Nav</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>Findings ACL 2025</td>
+                  <td>-</td>
+                  <td class="number">50.3</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>BeliefMapNav</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>NeurIPS 2025</td>
+                  <td>-</td>
+                  <td class="number">37.3</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>CogNav</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>ICCV 2025</td>
+                  <td>-</td>
+                  <td class="number">46.6</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>ASCENT</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>IEEE RA-L 2026</td>
+                  <td>-</td>
+                  <td class="number">44.5</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>MSGNav</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>CVPR 2026</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td class="number">48.3</td>
+                </tr>
+                <tr>
+                  <td>SysNav</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>arXiv 2026</td>
+                  <td class="number second">80.8</td>
+                  <td class="number second">50.7</td>
+                  <td class="number second">54.9</td>
+                </tr>
+                <tr class="group-row">
+                  <td colspan="7">Ours</td>
+                </tr>
+                <tr class="ours-row">
+                  <td>FuseNav (ours)</td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td><span class="mark yes">&#10003;</span></td>
+                  <td>Ours</td>
+                  <td class="number best">84.7</td>
+                  <td class="number best">51.3</td>
+                  <td class="number best">57.3</td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="demos" aria-label="Navigation demos">
+        <div class="section-inner">
+          <div class="section-head">
+            <h2>Simulator Video Demos</h2>
+          </div>
+
+          <div class="demo-player" data-demo-player>
+            <div class="demo-stage">
+              <video
+                id="demoVideo"
+                controls
+                muted
+                playsinline
+                preload="metadata"
+                src="media/demos/current_01_couch_eF36g7L6Z9M_spl074_path17m.mp4"
+              ></video>
+              <button
+                class="demo-arrow demo-arrow-left"
+                id="prevDemo"
+                type="button"
+                aria-label="Previous demo video"
+              >
+                <span class="arrow-shape left" aria-hidden="true"></span>
+              </button>
+              <button
+                class="demo-arrow demo-arrow-right"
+                id="nextDemo"
+                type="button"
+                aria-label="Next demo video"
+              >
+                <span class="arrow-shape right" aria-hidden="true"></span>
+              </button>
+            </div>
+            <div class="demo-body">
+              <div>
+                <h3 class="demo-title" id="demoTarget">Target: couch</h3>
+              </div>
+              <div class="demo-count" id="demoCount">Demo 1 / 9</div>
+            </div>
+            <div class="demo-controls" aria-label="Demo video selection">
+              <div class="demo-dots" id="demoDots"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="section-inner">
+        <span>FuseNav project page draft, May 2026.</span>
+        <span>Internal preview only. Paper, code, and citations are not finalized.</span>
+      </div>
+    </footer>
+    <script>
+      (() => {
+        const PLAYBACK_RATE = 1.5;
+        const demos = [
+          {
+            src: "media/demos/current_01_couch_eF36g7L6Z9M_spl074_path17m.mp4",
+            target: "couch"
+          },
+          {
+            src: "media/demos/current_02_bed_a8BtkwhxdRV_spl066_path11m.mp4",
+            target: "bed"
+          },
+          {
+            src: "media/demos/current_03_uidhm3d_v2_val_000203_0015_Dd4bFSTQ8gi_ep0_dep1_refe3f2e0d0a6-dtg=0.22-ps=1.00-raw=0.00-spl=0.23-sspl=0.21-dgr=-0.00-stairs=0.00-yaw=150.00-det=1.00-stop=1.00-start_yaw=-2.60-ever_det=1.00-ever_stop=1.00-cause=false_positive.MP4",
+            target: "couch"
+          },
+          {
+            src: "media/demos/current_04_chair_GLAQ4DNUx5U_spl079_path8m.mp4",
+            target: "chair"
+          },
+          {
+            src: "media/demos/current_05_uidhm3d_v2_val_000003_0007_4ok3usBNeis_ep1_dep4_ref60433d27a6-dtg=0.13-ps=1.00-raw=0.00-spl=0.73-sspl=0.72-dgr=-0.00-stairs=0.00-yaw=90.00-det=1.00-stop=1.00-start_yaw=-1.64-ever_det=1.00-ever_stop=1.00-cause=false_positive.mp4",
+            target: "chair"
+          },
+          {
+            src: "media/demos/current_06_couch_y9hTuugGdiq_spl055_path30m.mp4",
+            target: "couch"
+          },
+          {
+            src: "media/demos/current_07_tv_h1zeeAwLh9Z_spl058_path21m.mp4",
+            target: "tv"
+          },
+          {
+            src: "media/demos/current_08_toilet_bCPU9suPUw9_spl091_path6m.mp4",
+            target: "toilet"
+          },
+          {
+            src: "media/demos/current_09_uidhm3d_v2_val_000219_0014_Dd4bFSTQ8gi_ep0_dep2_ref18ecebaecd.mp4",
+            target: "toilet"
+          }
+        ];
+
+        const video = document.getElementById("demoVideo");
+        const target = document.getElementById("demoTarget");
+        const count = document.getElementById("demoCount");
+        const dots = document.getElementById("demoDots");
+        const previous = document.getElementById("prevDemo");
+        const next = document.getElementById("nextDemo");
+        let currentIndex = 0;
+        const dotButtons = demos.map((_, index) => {
+          const dot = document.createElement("button");
+          dot.className = "demo-dot";
+          dot.type = "button";
+          dot.setAttribute("aria-label", `Show demo ${index + 1} of ${demos.length}`);
+          dot.addEventListener("click", () => renderDemo(index, true));
+          dots.appendChild(dot);
+          return dot;
+        });
+
+        const applyPlaybackRate = () => {
+          video.defaultPlaybackRate = PLAYBACK_RATE;
+          video.playbackRate = PLAYBACK_RATE;
+        };
+
+        const playWhenReady = () => {
+          applyPlaybackRate();
+          video.play().catch(() => {});
+        };
+
+        const renderDemo = (index, shouldPlay) => {
+          currentIndex = (index + demos.length) % demos.length;
+          const demo = demos[currentIndex];
+
+          if (video.getAttribute("src") !== demo.src) {
+            video.pause();
+            video.setAttribute("src", demo.src);
+            video.load();
+          }
+
+          target.textContent = `Target: ${demo.target}`;
+          count.textContent = `Demo ${currentIndex + 1} / ${demos.length}`;
+          dotButtons.forEach((dot, dotIndex) => {
+            const isActive = dotIndex === currentIndex;
+            dot.classList.toggle("is-active", isActive);
+            if (isActive) {
+              dot.setAttribute("aria-current", "true");
+            } else {
+              dot.removeAttribute("aria-current");
+            }
+          });
+          applyPlaybackRate();
+
+          if (shouldPlay) {
+            if (video.readyState >= 1) {
+              playWhenReady();
+            } else {
+              video.addEventListener("loadedmetadata", playWhenReady, { once: true });
+            }
+          }
+        };
+
+        previous.addEventListener("click", () => renderDemo(currentIndex - 1, true));
+        next.addEventListener("click", () => renderDemo(currentIndex + 1, true));
+        video.addEventListener("loadedmetadata", applyPlaybackRate);
+        video.addEventListener("play", applyPlaybackRate);
+        renderDemo(0, false);
+      })();
+    </script>
+  </body>
+</html>
