@@ -201,7 +201,7 @@
       .demo-player video {
         display: block;
         width: 100%;
-        aspect-ratio: 1280 / 696;
+        aspect-ratio: var(--demo-aspect-ratio, 1280 / 696);
         object-fit: contain;
         background: #0f1110;
       }
@@ -512,9 +512,56 @@
             <span>C-RADIOv4 + SigLIP2 + SAM3</span>
           </div>
           <nav class="hero-links" aria-label="Page navigation">
+            <a href="#real-world-demos">Real-World Demos</a>
             <a href="#results">Results</a>
-            <a href="#demos">Demos</a>
+            <a href="#demos">Simulator Demos</a>
           </nav>
+        </div>
+      </section>
+
+      <section id="real-world-demos" aria-label="Real-world robot demos">
+        <div class="section-inner">
+          <div class="section-head">
+            <h2>Real-World Video Demos</h2>
+          </div>
+
+          <div class="demo-player" data-carousel="realworld" style="--demo-aspect-ratio: 16 / 9">
+            <div class="demo-stage">
+              <video
+                controls
+                muted
+                playsinline
+                preload="metadata"
+                src="media/realworld/realworld_01_elevator.mp4"
+                data-carousel-video
+              ></video>
+              <button
+                class="demo-arrow demo-arrow-left"
+                type="button"
+                aria-label="Previous real-world demo video"
+                data-carousel-prev
+              >
+                <span class="arrow-shape left" aria-hidden="true"></span>
+              </button>
+              <button
+                class="demo-arrow demo-arrow-right"
+                type="button"
+                aria-label="Next real-world demo video"
+                data-carousel-next
+              >
+                <span class="arrow-shape right" aria-hidden="true"></span>
+              </button>
+            </div>
+            <div class="demo-body">
+              <div>
+                <h3 class="demo-title" data-carousel-target>Target: elevator</h3>
+              </div>
+              <div class="demo-count" data-carousel-count>Demo 1 / 2</div>
+            </div>
+            <div class="demo-controls" aria-label="Real-world demo video selection">
+              <div class="demo-dots" data-carousel-dots></div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -819,41 +866,41 @@
             <h2>Simulator Video Demos</h2>
           </div>
 
-          <div class="demo-player" data-demo-player>
+          <div class="demo-player" data-carousel="simulator">
             <div class="demo-stage">
               <video
-                id="demoVideo"
                 controls
                 muted
                 playsinline
                 preload="metadata"
                 src="media/demos/current_01_couch_eF36g7L6Z9M_spl074_path17m.mp4"
+                data-carousel-video
               ></video>
               <button
                 class="demo-arrow demo-arrow-left"
-                id="prevDemo"
                 type="button"
                 aria-label="Previous demo video"
+                data-carousel-prev
               >
                 <span class="arrow-shape left" aria-hidden="true"></span>
               </button>
               <button
                 class="demo-arrow demo-arrow-right"
-                id="nextDemo"
                 type="button"
                 aria-label="Next demo video"
+                data-carousel-next
               >
                 <span class="arrow-shape right" aria-hidden="true"></span>
               </button>
             </div>
             <div class="demo-body">
               <div>
-                <h3 class="demo-title" id="demoTarget">Target: couch</h3>
+                <h3 class="demo-title" data-carousel-target>Target: couch</h3>
               </div>
-              <div class="demo-count" id="demoCount">Demo 1 / 9</div>
+              <div class="demo-count" data-carousel-count>Demo 1 / 9</div>
             </div>
             <div class="demo-controls" aria-label="Demo video selection">
-              <div class="demo-dots" id="demoDots"></div>
+              <div class="demo-dots" data-carousel-dots></div>
             </div>
           </div>
         </div>
@@ -868,110 +915,132 @@
     </footer>
     <script>
       (() => {
-        const PLAYBACK_RATE = 1.5;
-        const demos = [
-          {
-            src: "media/demos/current_01_couch_eF36g7L6Z9M_spl074_path17m.mp4",
-            target: "couch"
-          },
-          {
-            src: "media/demos/current_02_bed_a8BtkwhxdRV_spl066_path11m.mp4",
-            target: "bed"
-          },
-          {
-            src: "media/demos/current_03_uidhm3d_v2_val_000203_0015_Dd4bFSTQ8gi_ep0_dep1_refe3f2e0d0a6-dtg=0.22-ps=1.00-raw=0.00-spl=0.23-sspl=0.21-dgr=-0.00-stairs=0.00-yaw=150.00-det=1.00-stop=1.00-start_yaw=-2.60-ever_det=1.00-ever_stop=1.00-cause=false_positive.MP4",
-            target: "couch"
-          },
-          {
-            src: "media/demos/current_04_chair_GLAQ4DNUx5U_spl079_path8m.mp4",
-            target: "chair"
-          },
-          {
-            src: "media/demos/current_05_uidhm3d_v2_val_000003_0007_4ok3usBNeis_ep1_dep4_ref60433d27a6-dtg=0.13-ps=1.00-raw=0.00-spl=0.73-sspl=0.72-dgr=-0.00-stairs=0.00-yaw=90.00-det=1.00-stop=1.00-start_yaw=-1.64-ever_det=1.00-ever_stop=1.00-cause=false_positive.mp4",
-            target: "chair"
-          },
-          {
-            src: "media/demos/current_06_couch_y9hTuugGdiq_spl055_path30m.mp4",
-            target: "couch"
-          },
-          {
-            src: "media/demos/current_07_tv_h1zeeAwLh9Z_spl058_path21m.mp4",
-            target: "tv"
-          },
-          {
-            src: "media/demos/current_08_toilet_bCPU9suPUw9_spl091_path6m.mp4",
-            target: "toilet"
-          },
-          {
-            src: "media/demos/current_09_uidhm3d_v2_val_000219_0014_Dd4bFSTQ8gi_ep0_dep2_ref18ecebaecd.mp4",
-            target: "toilet"
-          }
-        ];
-
-        const video = document.getElementById("demoVideo");
-        const target = document.getElementById("demoTarget");
-        const count = document.getElementById("demoCount");
-        const dots = document.getElementById("demoDots");
-        const previous = document.getElementById("prevDemo");
-        const next = document.getElementById("nextDemo");
-        let currentIndex = 0;
-        const dotButtons = demos.map((_, index) => {
-          const dot = document.createElement("button");
-          dot.className = "demo-dot";
-          dot.type = "button";
-          dot.setAttribute("aria-label", `Show demo ${index + 1} of ${demos.length}`);
-          dot.addEventListener("click", () => renderDemo(index, true));
-          dots.appendChild(dot);
-          return dot;
-        });
-
-        const applyPlaybackRate = () => {
-          video.defaultPlaybackRate = PLAYBACK_RATE;
-          video.playbackRate = PLAYBACK_RATE;
-        };
-
-        const playWhenReady = () => {
-          applyPlaybackRate();
-          video.play().catch(() => {});
-        };
-
-        const renderDemo = (index, shouldPlay) => {
-          currentIndex = (index + demos.length) % demos.length;
-          const demo = demos[currentIndex];
-
-          if (video.getAttribute("src") !== demo.src) {
-            video.pause();
-            video.setAttribute("src", demo.src);
-            video.load();
-          }
-
-          target.textContent = `Target: ${demo.target}`;
-          count.textContent = `Demo ${currentIndex + 1} / ${demos.length}`;
-          dotButtons.forEach((dot, dotIndex) => {
-            const isActive = dotIndex === currentIndex;
-            dot.classList.toggle("is-active", isActive);
-            if (isActive) {
-              dot.setAttribute("aria-current", "true");
-            } else {
-              dot.removeAttribute("aria-current");
+        const DEFAULT_PLAYBACK_RATE = 1.5;
+        const carouselData = {
+          realworld: [
+            {
+              src: "media/realworld/realworld_01_elevator.mp4",
+              target: "elevator"
+            },
+            {
+              src: "media/realworld/realworld_02_trash_can.mp4",
+              target: "trash can"
             }
+          ],
+          simulator: [
+            {
+              src: "media/demos/current_01_couch_eF36g7L6Z9M_spl074_path17m.mp4",
+              target: "couch"
+            },
+            {
+              src: "media/demos/current_02_bed_a8BtkwhxdRV_spl066_path11m.mp4",
+              target: "bed"
+            },
+            {
+              src: "media/demos/current_03_uidhm3d_v2_val_000203_0015_Dd4bFSTQ8gi_ep0_dep1_refe3f2e0d0a6-dtg=0.22-ps=1.00-raw=0.00-spl=0.23-sspl=0.21-dgr=-0.00-stairs=0.00-yaw=150.00-det=1.00-stop=1.00-start_yaw=-2.60-ever_det=1.00-ever_stop=1.00-cause=false_positive.MP4",
+              target: "couch"
+            },
+            {
+              src: "media/demos/current_04_chair_GLAQ4DNUx5U_spl079_path8m.mp4",
+              target: "chair"
+            },
+            {
+              src: "media/demos/current_05_uidhm3d_v2_val_000003_0007_4ok3usBNeis_ep1_dep4_ref60433d27a6-dtg=0.13-ps=1.00-raw=0.00-spl=0.73-sspl=0.72-dgr=-0.00-stairs=0.00-yaw=90.00-det=1.00-stop=1.00-start_yaw=-1.64-ever_det=1.00-ever_stop=1.00-cause=false_positive.mp4",
+              target: "chair"
+            },
+            {
+              src: "media/demos/current_06_couch_y9hTuugGdiq_spl055_path30m.mp4",
+              target: "couch"
+            },
+            {
+              src: "media/demos/current_07_tv_h1zeeAwLh9Z_spl058_path21m.mp4",
+              target: "tv"
+            },
+            {
+              src: "media/demos/current_08_toilet_bCPU9suPUw9_spl091_path6m.mp4",
+              target: "toilet"
+            },
+            {
+              src: "media/demos/current_09_uidhm3d_v2_val_000219_0014_Dd4bFSTQ8gi_ep0_dep2_ref18ecebaecd.mp4",
+              target: "toilet"
+            }
+          ]
+        };
+
+        const initCarousel = (player) => {
+          const demos = carouselData[player.dataset.carousel] || [];
+          const video = player.querySelector("[data-carousel-video]");
+          const target = player.querySelector("[data-carousel-target]");
+          const count = player.querySelector("[data-carousel-count]");
+          const dots = player.querySelector("[data-carousel-dots]");
+          const previous = player.querySelector("[data-carousel-prev]");
+          const next = player.querySelector("[data-carousel-next]");
+          let currentIndex = 0;
+
+          if (!demos.length || !video || !target || !count || !dots || !previous || !next) {
+            return;
+          }
+
+          const applyPlaybackRate = () => {
+            video.defaultPlaybackRate = DEFAULT_PLAYBACK_RATE;
+            video.playbackRate = DEFAULT_PLAYBACK_RATE;
+          };
+
+          const playWhenReady = () => {
+            applyPlaybackRate();
+            video.play().catch(() => {});
+          };
+
+          const renderDemo = (index, shouldPlay) => {
+            currentIndex = (index + demos.length) % demos.length;
+            const demo = demos[currentIndex];
+
+            if (video.getAttribute("src") !== demo.src) {
+              video.pause();
+              video.setAttribute("src", demo.src);
+              video.load();
+            }
+
+            target.textContent = `Target: ${demo.target}`;
+            count.textContent = `Demo ${currentIndex + 1} / ${demos.length}`;
+            dotButtons.forEach((dot, dotIndex) => {
+              const isActive = dotIndex === currentIndex;
+              dot.classList.toggle("is-active", isActive);
+              if (isActive) {
+                dot.setAttribute("aria-current", "true");
+              } else {
+                dot.removeAttribute("aria-current");
+              }
+            });
+            applyPlaybackRate();
+
+            if (shouldPlay) {
+              if (video.readyState >= 1) {
+                playWhenReady();
+              } else {
+                video.addEventListener("loadedmetadata", playWhenReady, { once: true });
+              }
+            }
+          };
+
+          const dotButtons = demos.map((_, index) => {
+            const dot = document.createElement("button");
+            dot.className = "demo-dot";
+            dot.type = "button";
+            dot.setAttribute("aria-label", `Show demo ${index + 1} of ${demos.length}`);
+            dot.addEventListener("click", () => renderDemo(index, true));
+            dots.appendChild(dot);
+            return dot;
           });
-          applyPlaybackRate();
 
-          if (shouldPlay) {
-            if (video.readyState >= 1) {
-              playWhenReady();
-            } else {
-              video.addEventListener("loadedmetadata", playWhenReady, { once: true });
-            }
-          }
+          previous.addEventListener("click", () => renderDemo(currentIndex - 1, true));
+          next.addEventListener("click", () => renderDemo(currentIndex + 1, true));
+          video.addEventListener("loadedmetadata", applyPlaybackRate);
+          video.addEventListener("play", applyPlaybackRate);
+          renderDemo(0, false);
         };
 
-        previous.addEventListener("click", () => renderDemo(currentIndex - 1, true));
-        next.addEventListener("click", () => renderDemo(currentIndex + 1, true));
-        video.addEventListener("loadedmetadata", applyPlaybackRate);
-        video.addEventListener("play", applyPlaybackRate);
-        renderDemo(0, false);
+        document.querySelectorAll("[data-carousel]").forEach(initCarousel);
       })();
     </script>
   </body>
