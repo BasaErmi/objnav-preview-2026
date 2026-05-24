@@ -525,7 +525,12 @@
             <h2>Real-World Video Demos</h2>
           </div>
 
-          <div class="demo-player" data-carousel="realworld" style="--demo-aspect-ratio: 16 / 9">
+          <div
+            class="demo-player"
+            data-carousel="realworld"
+            data-playback-rate="1"
+            style="--demo-aspect-ratio: 16 / 9"
+          >
             <div class="demo-stage">
               <video
                 controls
@@ -866,7 +871,7 @@
             <h2>Simulator Video Demos</h2>
           </div>
 
-          <div class="demo-player" data-carousel="simulator">
+          <div class="demo-player" data-carousel="simulator" data-playback-rate="1.5">
             <div class="demo-stage">
               <video
                 controls
@@ -975,6 +980,7 @@
           const dots = player.querySelector("[data-carousel-dots]");
           const previous = player.querySelector("[data-carousel-prev]");
           const next = player.querySelector("[data-carousel-next]");
+          const playbackRate = Number(player.dataset.playbackRate) || DEFAULT_PLAYBACK_RATE;
           let currentIndex = 0;
 
           if (!demos.length || !video || !target || !count || !dots || !previous || !next) {
@@ -982,8 +988,8 @@
           }
 
           const applyPlaybackRate = () => {
-            video.defaultPlaybackRate = DEFAULT_PLAYBACK_RATE;
-            video.playbackRate = DEFAULT_PLAYBACK_RATE;
+            video.defaultPlaybackRate = playbackRate;
+            video.playbackRate = playbackRate;
           };
 
           const playWhenReady = () => {
