@@ -1,25 +1,65 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex,nofollow,noarchive,noimageindex" />
-    <meta name="googlebot" content="noindex,nofollow,noarchive,noimageindex" />
-    <title>FuseNav - Unified Perception for Object Navigation</title>
+    <meta
+      name="description"
+      content="AECNav: Active Evidence Consolidation for Efficient Zero-Shot Open-Vocabulary Object Navigation."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#f5f6fa" />
+    <title>AECNav | Active Evidence Consolidation for Object Navigation</title>
+    <script>
+      (function () {
+        try {
+          var savedTheme = localStorage.getItem("aecnav-theme");
+          var preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+          document.documentElement.dataset.theme = savedTheme || preferredTheme;
+        } catch (error) {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
     <style>
       :root {
         color-scheme: light;
-        --ink: #151816;
-        --muted: #66716b;
-        --line: #d8ded9;
-        --paper: #f7f8f6;
-        --panel: #ffffff;
-        --green: #1f7a5a;
-        --green-dark: #155940;
-        --orange: #d95532;
-        --blue: #2d5b8a;
-        --gold: #f2b84b;
-        --shadow: 0 20px 45px rgba(21, 24, 22, 0.12);
+        --page: #f5f6fa;
+        --surface: #ffffff;
+        --surface-soft: #eef0f6;
+        --ink: #181a20;
+        --muted: #6c707d;
+        --line: #dfe2ea;
+        --line-strong: #cbd0dc;
+        --purple: #6848b8;
+        --purple-soft: #eee9fb;
+        --teal: #1b9292;
+        --teal-soft: #e3f4f2;
+        --orange: #df7617;
+        --orange-soft: #fff0e2;
+        --shadow: 0 18px 50px rgba(39, 42, 55, 0.08);
+        --title-font: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --body-font: Georgia, "Times New Roman", serif;
+      }
+
+      html[data-theme="dark"] {
+        color-scheme: dark;
+        --page: #111319;
+        --surface: #191c24;
+        --surface-soft: #222630;
+        --ink: #f2f3f6;
+        --muted: #acb0bc;
+        --line: #303541;
+        --line-strong: #444a59;
+        --purple: #a88ce8;
+        --purple-soft: #302844;
+        --teal: #65c9c5;
+        --teal-soft: #1c393a;
+        --orange: #f0a055;
+        --orange-soft: #402d20;
+        --shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
       }
 
       * {
@@ -32,1020 +72,810 @@
 
       body {
         margin: 0;
-        font-family:
-          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", sans-serif;
+        background: var(--page);
         color: var(--ink);
-        background: var(--paper);
-        letter-spacing: 0;
+        font-family: var(--body-font);
+        font-size: 17px;
+        line-height: 1.72;
+        transition: background 180ms ease, color 180ms ease;
+      }
+
+      button,
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      img,
+      video {
+        display: block;
+        max-width: 100%;
       }
 
       a {
         color: inherit;
       }
 
-      .hero {
-        position: relative;
-        min-height: auto;
-        display: grid;
-        align-items: start;
-        background: var(--panel);
-        border-bottom: 1px solid var(--line);
+      .shell {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
       }
 
-      .hero-inner {
-        width: min(900px, calc(100% - 36px));
-        margin: 0 auto;
-        padding: 46px 0 44px;
+      .theme-toggle {
+        position: fixed;
+        z-index: 20;
+        top: 18px;
+        right: 20px;
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--surface) 88%, transparent);
         color: var(--ink);
+        box-shadow: 0 8px 24px rgba(35, 38, 50, 0.08);
+        cursor: pointer;
+        backdrop-filter: blur(12px);
+      }
+
+      .theme-toggle:hover {
+        border-color: var(--line-strong);
+        transform: translateY(-1px);
+      }
+
+      .theme-toggle svg {
+        width: 19px;
+        height: 19px;
+      }
+
+      .theme-toggle .sun,
+      html[data-theme="dark"] .theme-toggle .moon {
+        display: none;
+      }
+
+      html[data-theme="dark"] .theme-toggle .sun {
+        display: block;
+      }
+
+      .hero {
+        max-width: 1040px;
+        padding: 78px 0 64px;
+        margin: 0 auto;
         text-align: center;
       }
 
-      .eyebrow {
-        margin-bottom: 12px;
-        color: var(--muted);
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0;
+      .hero h1 {
+        max-width: 1000px;
+        margin: 0 auto;
+        font-family: var(--title-font);
+        font-size: clamp(38px, 6.1vw, 68px);
+        font-weight: 820;
+        letter-spacing: -0.052em;
+        line-height: 1.02;
       }
 
-      h1 {
-        margin: 0;
-        font-size: clamp(34px, 5vw, 46px);
+      .brand {
+        display: inline-block;
+        background: linear-gradient(100deg, var(--purple) 5%, var(--teal) 51%, var(--orange) 95%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+
+      .hero-title-line {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.72em;
+        letter-spacing: -0.042em;
         line-height: 1.12;
-        letter-spacing: 0;
-      }
-
-      .project-subtitle {
-        margin: 10px 0 0;
-        color: #2f3832;
-        font-size: clamp(18px, 2.1vw, 24px);
-        line-height: 1.35;
-        font-weight: 700;
       }
 
       .authors {
-        margin: 16px auto 0;
-        color: #2f3832;
-        font-size: 15px;
-        line-height: 1.55;
-        font-weight: 650;
+        margin: 30px auto 8px;
+        font-family: var(--title-font);
+        font-size: clamp(15px, 2vw, 18px);
+        font-weight: 600;
+        line-height: 1.8;
       }
 
-      .authors a {
-        text-decoration: none;
-      }
-
-      .affiliations {
-        margin: 8px auto 0;
+      .affiliations,
+      .author-note,
+      .author-emails {
+        margin: 2px auto;
         color: var(--muted);
+        font-family: var(--title-font);
         font-size: 13px;
-        line-height: 1.55;
-        font-weight: 550;
-      }
-
-      .affiliations span {
-        display: block;
-      }
-
-      .hero-copy {
-        max-width: 790px;
-        margin: 18px auto 0;
-        color: #3f4944;
-        font-size: 16px;
-        line-height: 1.6;
-        font-weight: 500;
-      }
-
-      .hero-meta {
-        margin-top: 16px;
-        color: var(--muted);
-        font-size: 14px;
-        line-height: 1.6;
-        font-weight: 650;
-      }
-
-      .hero-meta span {
-        display: inline;
-      }
-
-      .hero-meta span + span::before {
-        content: " · ";
-      }
-
-      .hero-links {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 18px;
-        margin-top: 18px;
-      }
-
-      .hero-links a {
-        color: var(--green);
-        text-decoration: none;
-        font-size: 15px;
-        font-weight: 800;
-      }
-
-      section {
-        padding: clamp(52px, 7vw, 92px) clamp(18px, 4vw, 58px);
-      }
-
-      .section-inner {
-        width: min(1180px, 100%);
-        margin: 0 auto;
-      }
-
-      .section-head {
-        display: grid;
-        grid-template-columns: minmax(0, 0.8fr) minmax(280px, 0.9fr);
-        gap: 36px;
-        align-items: end;
-        margin-bottom: 34px;
-      }
-
-      h2 {
-        margin: 0;
-        font-size: clamp(34px, 5vw, 60px);
-        line-height: 1.02;
-        letter-spacing: 0;
-      }
-
-      .lead {
-        margin: 0;
-        color: #4f5a54;
-        font-size: 17px;
         line-height: 1.65;
       }
 
-      .metric.accent {
-        background: var(--green-dark);
+      .author-emails a {
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
       }
 
-      .demo-player {
-        overflow: hidden;
-        max-width: 1120px;
-        margin: 0 auto;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel);
-        box-shadow: var(--shadow);
-      }
-
-      .demo-stage {
-        position: relative;
-        background: #0f1110;
-      }
-
-      .demo-player video {
-        display: block;
-        width: 100%;
-        aspect-ratio: var(--demo-aspect-ratio, 1280 / 696);
-        object-fit: contain;
-        background: #0f1110;
-      }
-
-      .demo-arrow {
-        position: absolute;
-        top: 50%;
-        z-index: 2;
-        display: grid;
-        width: 48px;
-        height: 48px;
-        place-items: center;
-        border: 1px solid rgba(255, 255, 255, 0.84);
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.92);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
-        cursor: pointer;
-        transform: translateY(-50%);
-      }
-
-      .demo-arrow:hover,
-      .demo-arrow:focus-visible {
-        border-color: #ffffff;
-        background: #ffffff;
-        outline: 2px solid rgba(31, 122, 90, 0.28);
-        outline-offset: 2px;
-      }
-
-      .demo-arrow-left {
-        left: 18px;
-      }
-
-      .demo-arrow-right {
-        right: 18px;
-      }
-
-      .arrow-shape {
-        display: block;
-        width: 0;
-        height: 0;
-        border-top: 8px solid transparent;
-        border-bottom: 8px solid transparent;
-      }
-
-      .arrow-shape.left {
-        margin-left: -3px;
-        border-right: 12px solid var(--green-dark);
-      }
-
-      .arrow-shape.right {
-        margin-right: -3px;
-        border-left: 12px solid var(--green-dark);
-      }
-
-      .demo-body {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 18px;
-        padding: 18px;
-        align-items: center;
-      }
-
-      .demo-title {
-        margin: 0;
-        font-size: 20px;
-        font-weight: 850;
-      }
-
-      .demo-count {
-        color: var(--muted);
-        font-size: 13px;
-        font-weight: 800;
-        white-space: nowrap;
-      }
-
-      .demo-controls {
+      .hero-actions {
         display: flex;
-        align-items: center;
+        flex-wrap: wrap;
         justify-content: center;
-        padding: 0 18px 18px;
+        gap: 10px;
+        margin-top: 27px;
       }
 
-      .demo-dots {
-        display: flex;
+      .action {
+        display: inline-flex;
+        min-height: 42px;
         align-items: center;
+        gap: 8px;
         justify-content: center;
-        gap: 9px;
+        padding: 9px 17px;
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--ink);
+        font-family: var(--title-font);
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 7px 20px rgba(38, 42, 55, 0.06);
       }
 
-      .demo-dot {
-        width: 10px;
-        height: 10px;
-        padding: 0;
-        border: 1px solid #a9b5ac;
-        border-radius: 50%;
-        background: #ffffff;
-        cursor: pointer;
+      .action.primary {
+        border-color: var(--purple);
+        background: var(--purple);
+        color: #ffffff;
       }
 
-      .demo-dot:hover,
-      .demo-dot:focus-visible {
-        border-color: var(--green);
-        outline: none;
+      .action[aria-disabled="true"] {
+        cursor: default;
       }
 
-      .demo-dot.is-active {
-        border-color: var(--green-dark);
-        background: var(--green);
-        box-shadow: 0 0 0 4px #dbece4;
+      .action svg {
+        width: 16px;
+        height: 16px;
       }
 
-      .pill {
-        white-space: nowrap;
-        padding: 7px 8px;
-        border-radius: 6px;
-        background: #eef5f1;
-        color: var(--green-dark);
-        font-size: 12px;
-        font-weight: 850;
+      .section {
+        padding: 56px 0;
       }
 
-      .pill.orange {
-        background: #fff0eb;
-        color: var(--orange);
+      .section-heading {
+        margin: 0 auto 32px;
+        text-align: center;
+        font-family: var(--title-font);
+        font-size: clamp(25px, 3.2vw, 34px);
+        font-weight: 780;
+        letter-spacing: -0.035em;
+        line-height: 1.15;
       }
 
-      .pill.blue {
-        background: #edf3fa;
-        color: var(--blue);
-      }
-
-      .results {
-        background: #fff;
-      }
-
-      .table-wrap {
-        overflow: hidden;
-        max-width: 980px;
-        margin: 0 auto;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: #fff;
-        box-shadow: var(--shadow);
-      }
-
-      .result-table-image {
+      .section-heading::after {
+        content: "";
         display: block;
-        width: 100%;
+        width: 84px;
+        height: 4px;
+        margin: 16px auto 0;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--purple), var(--teal), var(--orange));
+      }
+
+      .section-intro {
         max-width: 920px;
-        height: auto;
-        margin: 0 auto;
-        background: #fff;
+        margin: -10px auto 30px;
+        color: var(--muted);
+        text-align: center;
       }
 
-      table {
+      .paper-figure {
+        overflow: hidden;
+        margin: 28px 0 0;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: var(--shadow);
+      }
+
+      .paper-figure img {
         width: 100%;
-        border-collapse: collapse;
-        min-width: 980px;
-        font-size: 13px;
+        height: auto;
       }
 
-      th,
-      td {
-        padding: 11px 12px;
-        border-bottom: 1px solid var(--line);
-        text-align: left;
-        vertical-align: middle;
+      .idea-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 22px;
       }
 
-      th {
-        background: #edf2ef;
-        color: #344039;
-        font-size: 12px;
+      .idea-card {
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--surface);
+      }
+
+      .idea-card:nth-child(1) {
+        border-top: 3px solid var(--teal);
+      }
+
+      .idea-card:nth-child(2) {
+        border-top: 3px solid var(--purple);
+      }
+
+      .idea-card:nth-child(3) {
+        border-top: 3px solid var(--orange);
+      }
+
+      .idea-number {
+        color: var(--muted);
+        font-family: var(--title-font);
+        font-size: 11px;
+        font-weight: 780;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
       }
 
-      tr:last-child td {
-        border-bottom: 0;
+      .idea-card h3 {
+        margin: 8px 0 7px;
+        font-family: var(--title-font);
+        font-size: 17px;
+        line-height: 1.25;
       }
 
-      .group-row td {
-        background: #f6f8f6;
-        color: #536057;
-        font-size: 12px;
-        font-style: italic;
-        font-weight: 800;
-        text-transform: none;
-      }
-
-      .ours-row td {
-        background: #eff8f3;
-        font-weight: 850;
-      }
-
-      .number {
-        font-variant-numeric: tabular-nums;
-        font-weight: 850;
-      }
-
-      .best {
-        color: var(--green-dark);
-      }
-
-      .second {
-        text-decoration: underline;
-        text-underline-offset: 0.18em;
-      }
-
-      .mark {
-        display: inline-grid;
-        min-width: 18px;
-        place-items: center;
-        font-weight: 900;
-      }
-
-      .mark.yes {
-        color: var(--green-dark);
-      }
-
-      .mark.no {
-        color: var(--orange);
-      }
-
-      footer {
-        padding: 34px clamp(18px, 4vw, 58px);
-        border-top: 1px solid var(--line);
-        background: #fff;
+      .idea-card p {
+        margin: 0;
         color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .idea-card p strong {
+        color: var(--ink);
+        font-family: var(--title-font);
+        font-weight: 780;
+      }
+
+      .demo-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .featured-video,
+      .demo-card {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .featured-video video,
+      .demo-card video {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: #08090d;
+        object-fit: contain;
+      }
+
+      .demo-subheading {
+        margin: 38px 0 18px;
+        font-family: var(--title-font);
+        font-size: clamp(19px, 2.3vw, 24px);
+        font-weight: 760;
+        letter-spacing: -0.025em;
+        line-height: 1.2;
+      }
+
+      .demo-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        padding: 13px 16px 15px;
+        border-top: 1px solid var(--line);
+        font-family: var(--title-font);
         font-size: 13px;
       }
 
-      footer .section-inner {
-        display: flex;
-        justify-content: space-between;
-        gap: 24px;
-        flex-wrap: wrap;
+      .demo-details span {
+        color: var(--muted);
       }
 
-      @media (max-width: 880px) {
-        .section-head {
-          grid-template-columns: 1fr;
-        }
-
-        .demo-body {
-          grid-template-columns: 1fr;
-        }
-
-        .demo-count {
-          justify-self: start;
-        }
+      .demo-details strong {
+        display: block;
+        margin-top: 2px;
+        color: var(--ink);
+        font-size: 14px;
       }
 
-      @media (max-width: 520px) {
-        .hero-inner {
+      .method-block {
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .method-block img {
+        width: 100%;
+        border-radius: 10px;
+        background: #ffffff;
+      }
+
+      .result-item + .result-item {
+        margin-top: 48px;
+        padding-top: 48px;
+        border-top: 1px solid var(--line);
+      }
+
+      .result-subheading {
+        margin: 0 0 10px;
+        text-align: center;
+        font-family: var(--title-font);
+        font-size: clamp(20px, 2.5vw, 25px);
+        font-weight: 760;
+        letter-spacing: -0.025em;
+        line-height: 1.25;
+      }
+
+      .result-copy {
+        max-width: 920px;
+        margin: 0 auto 22px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .result-copy strong {
+        color: var(--ink);
+      }
+
+      .result-figure {
+        overflow: hidden;
+        width: 100%;
+        margin: 0 auto;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: var(--shadow);
+      }
+
+      .result-figure img {
+        width: 100%;
+        height: auto;
+      }
+
+      .result-figure.wide {
+        max-width: 1160px;
+      }
+
+      .result-figure.large {
+        max-width: 960px;
+      }
+
+      .result-figure.medium {
+        max-width: 880px;
+      }
+
+      .result-figure.compact {
+        max-width: 760px;
+      }
+
+      .citation-box {
+        position: relative;
+        overflow-x: auto;
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--surface);
+      }
+
+      .citation-box pre {
+        margin: 0;
+        color: var(--muted);
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 13px;
+        line-height: 1.7;
+        white-space: pre-wrap;
+      }
+
+      .footer {
+        padding: 55px 0 38px;
+        color: var(--muted);
+        text-align: center;
+        font-family: var(--title-font);
+        font-size: 12px;
+        letter-spacing: 0.04em;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity 520ms ease, transform 520ms ease;
+      }
+
+      .reveal.is-visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      @media (max-width: 860px) {
+        .shell {
           width: min(100% - 28px, 1180px);
-          padding: 34px 0 36px;
         }
 
-        h1 {
-          font-size: 46px;
+        .hero {
+          padding-top: 68px;
         }
 
-        section {
-          padding-left: 14px;
-          padding-right: 14px;
+        .idea-grid,
+        .demo-grid {
+          grid-template-columns: 1fr;
         }
 
-        .demo-arrow {
-          width: 40px;
-          height: 40px;
+      }
+
+      @media (max-width: 560px) {
+        body {
+          font-size: 16px;
         }
 
-        .demo-arrow-left {
-          left: 10px;
+        .theme-toggle {
+          top: 12px;
+          right: 12px;
         }
 
-        .demo-arrow-right {
-          right: 10px;
+        .hero {
+          padding-bottom: 36px;
+        }
+
+        .section {
+          padding: 42px 0;
+        }
+
+        .result-item + .result-item {
+          margin-top: 38px;
+          padding-top: 38px;
+        }
+
+        .result-figure {
+          padding: 7px;
+          border-radius: 12px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+
+        .reveal {
+          opacity: 1;
+          transform: none;
         }
       }
     </style>
   </head>
   <body>
-    <main>
-      <section class="hero" aria-label="FuseNav project overview">
-        <div class="hero-inner">
-          <h1>FuseNav</h1>
-          <p class="project-subtitle">Unified Perception for Zero-Shot Object Navigation</p>
-          <div class="authors" aria-label="Authors">
-            Guanlin Liu<sup>1</sup>,
-            Shaobin Lin<sup>1</sup>,
-            Zeying Gong<sup>2</sup>,
-            Junjie Hu<sup>1,*</sup>
-          </div>
-          <div class="affiliations" aria-label="Affiliations">
-            <span><sup>1</sup>The Chinese University of Hong Kong, Shenzhen</span>
-            <span><sup>2</sup>The Hong Kong University of Science and Technology (Guangzhou)</span>
-            <span><sup>*</sup>Corresponding author</span>
-          </div>
-          <p class="hero-copy">
-            A C-RADIO-centered zero-shot ObjectNav system with unified scene
-            scoring, detection, segmentation, and geometry-aware frontier
-            planning. The paper is in preparation, targeting an IEEE RA-L
-            submission.
-          </p>
-          <div class="hero-meta" aria-label="Project status">
-            <span>Training-free zero-shot navigation</span>
-            <span>C-RADIOv4 + SigLIP2 + SAM3</span>
-          </div>
-          <nav class="hero-links" aria-label="Page navigation">
-            <a href="#real-world-demos">Real-World Demos</a>
-            <a href="#results">Results</a>
-            <a href="#demos">Simulator Demos</a>
-          </nav>
-        </div>
-      </section>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M20 15.2A8.3 8.3 0 0 1 8.8 4a8.4 8.4 0 1 0 11.2 11.2Z" />
+      </svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <circle cx="12" cy="12" r="3.5" />
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42" />
+      </svg>
+    </button>
 
-      <section id="real-world-demos" aria-label="Real-world robot demos">
-        <div class="section-inner">
-          <div class="section-head">
-            <h2>Real-World Video Demos</h2>
-          </div>
+    <main class="shell">
+      <header class="hero">
+        <h1 class="reveal">
+          <span class="brand">AECNav</span>
+          <span class="hero-title-line">Active Evidence Consolidation for Efficient Zero-Shot Open-Vocabulary Object Navigation</span>
+        </h1>
 
-          <div
-            class="demo-player"
-            data-carousel="realworld"
-            data-playback-rate="1"
-            style="--demo-aspect-ratio: 16 / 9"
+        <p class="authors reveal">
+          Guanlin Liu<sup>1</sup>, Shaobin Ling<sup>1</sup>, Renyuan Liu<sup>1</sup>,
+          Zeying Gong<sup>2</sup>, Junjie Hu<sup>1,&dagger;</sup>
+        </p>
+        <p class="affiliations reveal">
+          <sup>1</sup>School of Artificial Intelligence (SAI), The Chinese University of Hong Kong, Shenzhen<br />
+          <sup>2</sup>Artificial Intelligence Thrust (AI Thrust), Information Hub, The Hong Kong University of Science and Technology (Guangzhou)
+        </p>
+        <p class="author-note reveal"><sup>&dagger;</sup>Corresponding author</p>
+        <p class="author-emails reveal">
+          Email:
+          <a href="mailto:guanlinliu@link.cuhk.edu.cn">guanlinliu@link.cuhk.edu.cn</a>,
+          <a href="mailto:hujunjie@cuhk.edu.cn">hujunjie@cuhk.edu.cn</a>
+        </p>
+
+        <div class="hero-actions reveal" aria-label="Project links">
+          <a
+            class="action primary"
+            href="https://arxiv.org/abs/2608.10817"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Read the paper on arXiv"
           >
-            <div class="demo-stage">
-              <video
-                controls
-                playsinline
-                preload="metadata"
-                src="media/realworld/realworld_01_elevator.mp4?v=20260525audio1"
-                data-carousel-video
-              ></video>
-              <button
-                class="demo-arrow demo-arrow-left"
-                type="button"
-                aria-label="Previous real-world demo video"
-                data-carousel-prev
-              >
-                <span class="arrow-shape left" aria-hidden="true"></span>
-              </button>
-              <button
-                class="demo-arrow demo-arrow-right"
-                type="button"
-                aria-label="Next real-world demo video"
-                data-carousel-next
-              >
-                <span class="arrow-shape right" aria-hidden="true"></span>
-              </button>
-            </div>
-            <div class="demo-body">
-              <div>
-                <h3 class="demo-title" data-carousel-target>Target: elevator</h3>
-              </div>
-              <div class="demo-count" data-carousel-count>Demo 1 / 2</div>
-            </div>
-            <div class="demo-controls" aria-label="Real-world demo video selection">
-              <div class="demo-dots" data-carousel-dots></div>
-            </div>
-          </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M6 3h9l3 3v15H6z" /><path d="M14 3v4h4M9 12h6M9 16h6" />
+            </svg>
+            Paper
+          </a>
+          <span class="action" aria-disabled="true" title="Code will be released upon acceptance">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14" />
+            </svg>
+            Code · To be released upon acceptance
+          </span>
+        </div>
+      </header>
+
+      <section class="section reveal" aria-labelledby="overview-title">
+        <h2 class="section-heading" id="overview-title">Overview</h2>
+        <p class="section-intro">
+          Zero-shot object-goal navigation (ZSON) requires a mobile robot to locate an arbitrarily specified object in a previously unseen environment without task-specific training. AECNav reframes ZSON as an evidence-driven perception-to-decision problem and integrates unified semantic perception, explicit spatial evidence accumulation, and active exploration in a training-free pipeline. Through evidence-gated perception, cluster-level evidence consolidation, and active evidence acquisition, AECNav reduces redundant visual processing, distinguishes genuine targets from visually similar distractors, and directs the robot toward informative viewpoints at low traversal cost.
+        </p>
+
+        <figure class="paper-figure">
+          <img src="assets/paper/overview.png" alt="AECNav overview and headline results" />
+        </figure>
+
+        <div class="idea-grid" aria-label="AECNav components">
+          <article class="idea-card">
+            <span class="idea-number">Component 01</span>
+            <h3>Evidence-Gated Perception</h3>
+            <p>Extracts scene- and patch-level cues in a <strong>single C-RADIOv4 forward pass</strong>, aligns them with a cached SigLIP2 goal embedding, and projects scene relevance onto a persistent value map. SAM3 segmentation is triggered only when patch-level evidence exceeds a <strong>similarity gate</strong>, reusing shared features and otherwise skipping the expensive decoder.</p>
+          </article>
+          <article class="idea-card">
+            <span class="idea-number">Component 02</span>
+            <h3>Evidence Consolidation</h3>
+            <p>Back-projects detected instances into 3D clusters and maintains a target belief for each cluster through <strong>additive log-odds updates</strong>. Goal evidence raises the belief, while confuser evidence and missed expected detections lower it; stopping requires stable belief and spatial proximity.</p>
+          </article>
+          <article class="idea-card">
+            <span class="idea-number">Component 03</span>
+            <h3>Active Evidence Acquisition</h3>
+            <p>When no cluster is reliable enough for commitment, scores reachable frontiers using normalized <strong>semantic relevance, expected information gain, and traversal cost</strong>. Information gain is estimated from unknown space visible along the shortest feasible path, guiding the robot toward viewpoints that efficiently reduce uncertainty.</p>
+          </article>
         </div>
       </section>
 
-      <section id="results" class="results" aria-label="Benchmark comparison">
-        <div class="section-inner">
-          <div class="section-head">
-            <h2>Success Rate Comparison</h2>
-          </div>
+      <section class="section reveal" aria-labelledby="demos-title">
+        <h2 class="section-heading" id="demos-title">Real-World Demonstrations</h2>
+        <p class="section-intro">
+          We deploy AECNav on a Unitree Go2 quadruped robot equipped with an Intel RealSense D455. The demonstrations cover eight open-vocabulary targets across four indoor scenes, including challenging visually similar distractors and targets beyond standard benchmark vocabularies.
+        </p>
+        <div class="featured-video">
+          <video controls muted playsinline preload="metadata">
+            <source src="media/realworld/display_19MB_HEVC.mp4" type="video/mp4" />
+          </video>
+        </div>
 
-          <div class="table-wrap">
-            <img
-              class="result-table-image"
-              src="assets/objectnav_sota_sr_table_homepage.png?v=20260519d"
-              alt="Success rate comparison table for ObjectNav benchmarks"
-            />
-            <!-- Source table kept in HTML only as a fallback data copy; the visible page embeds the rendered LaTeX table image above. -->
-            <div hidden>
-            <table>
-              <thead>
-                <tr>
-                  <th>Method</th>
-                  <th>TF</th>
-                  <th>ZS</th>
-                  <th>Venue</th>
-                  <th>HM3D-v2 SR</th>
-                  <th>MP3D-v1 SR</th>
-                  <th>HM3D-OVON val_unseen SR</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="group-row">
-                  <td colspan="7">Methods requiring training / non-training-free</td>
-                </tr>
-                <tr>
-                  <td>SemExp</td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td>NeurIPS 2020</td>
-                  <td>-</td>
-                  <td class="number">36.0</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>PONI</td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td>CVPR 2022</td>
-                  <td>-</td>
-                  <td class="number">31.8</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>ZSON</td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>NeurIPS 2022</td>
-                  <td>-</td>
-                  <td class="number">15.3</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>SGM / Imagine Before Go</td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>CVPR 2024</td>
-                  <td>-</td>
-                  <td class="number">37.7</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>DAgRL+OD</td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td>IROS 2024</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td class="number">37.1</td>
-                </tr>
-                <tr>
-                  <td>Uni-NaVid</td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>RSS 2025</td>
-                  <td class="number">73.7</td>
-                  <td>-</td>
-                  <td class="number">39.5</td>
-                </tr>
-                <tr>
-                  <td>MTU3D</td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>ICCV 2025</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td class="number">40.8</td>
-                </tr>
-                <tr>
-                  <td>FiLM-Nav</td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td>arXiv 2025</td>
-                  <td class="number">77.0</td>
-                  <td>-</td>
-                  <td class="number">40.8</td>
-                </tr>
-                <tr>
-                  <td>FOM-Nav</td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td>arXiv 2025</td>
-                  <td class="number">75.8</td>
-                  <td class="number">35.0</td>
-                  <td class="number">38.1</td>
-                </tr>
-                <tr>
-                  <td>OVSegDT</td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>CVPR 2026</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td class="number">44.7</td>
-                </tr>
-                <tr>
-                  <td>TrajRAG</td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>CVPR 2026</td>
-                  <td class="number">78.1</td>
-                  <td class="number">42.6</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>CompassNav</td>
-                  <td><span class="mark no">&times;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>ICLR 2026</td>
-                  <td class="number">61.6</td>
-                  <td class="number">42.0</td>
-                  <td class="number">43.5</td>
-                </tr>
-                <tr class="group-row">
-                  <td colspan="7">Training-free zero-shot methods</td>
-                </tr>
-                <tr>
-                  <td>CoW / CLIP on Wheels</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>CVPR 2023</td>
-                  <td>-</td>
-                  <td class="number">9.2</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>ESC</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>ICML 2023</td>
-                  <td>-</td>
-                  <td class="number">28.7</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>L3MVN</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>IROS 2023</td>
-                  <td class="number">36.3</td>
-                  <td class="number">34.9</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>VLFM</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>ICRA 2024</td>
-                  <td class="number">63.6</td>
-                  <td class="number">36.4</td>
-                  <td class="number">35.2</td>
-                </tr>
-                <tr>
-                  <td>SG-Nav</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>NeurIPS 2024</td>
-                  <td class="number">49.6</td>
-                  <td class="number">40.2</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>InstructNav</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>CoRL 2024</td>
-                  <td class="number">58.0</td>
-                  <td>-</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>UniGoal</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>CVPR 2025</td>
-                  <td>-</td>
-                  <td class="number">41.0</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>ApexNav</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>IEEE RA-L 2025</td>
-                  <td class="number">76.2</td>
-                  <td class="number">39.2</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>WMNav</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>IROS 2025</td>
-                  <td class="number">72.2</td>
-                  <td class="number">45.4</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>RATE-Nav</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>Findings ACL 2025</td>
-                  <td>-</td>
-                  <td class="number">50.3</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>BeliefMapNav</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>NeurIPS 2025</td>
-                  <td>-</td>
-                  <td class="number">37.3</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>CogNav</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>ICCV 2025</td>
-                  <td>-</td>
-                  <td class="number">46.6</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>ASCENT</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>IEEE RA-L 2026</td>
-                  <td>-</td>
-                  <td class="number">44.5</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>MSGNav</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>CVPR 2026</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td class="number">48.3</td>
-                </tr>
-                <tr>
-                  <td>SysNav</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>arXiv 2026</td>
-                  <td class="number second">80.8</td>
-                  <td class="number second">50.7</td>
-                  <td class="number second">54.9</td>
-                </tr>
-                <tr class="group-row">
-                  <td colspan="7">Ours</td>
-                </tr>
-                <tr class="ours-row">
-                  <td>FuseNav (ours)</td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td><span class="mark yes">&#10003;</span></td>
-                  <td>Ours</td>
-                  <td class="number best">84.7</td>
-                  <td class="number best">51.3</td>
-                  <td class="number best">57.3</td>
-                </tr>
-              </tbody>
-            </table>
+        <h3 class="demo-subheading">More Demonstrations</h3>
+        <div class="demo-grid">
+          <article class="demo-card">
+            <video controls muted playsinline preload="metadata">
+              <source src="media/realworld/Hallway_Printer_7MB_HEVC.mp4" type="video/mp4" />
+            </video>
+            <div class="demo-details">
+              <span>Scene<strong>Hallway</strong></span>
+              <span>Goal<strong>Printer</strong></span>
             </div>
-          </div>
+          </article>
+
+          <article class="demo-card">
+            <video controls muted playsinline preload="metadata">
+              <source src="media/realworld/Hallway_Water Refill Station_4MB_HEVC.mp4" type="video/mp4" />
+            </video>
+            <div class="demo-details">
+              <span>Scene<strong>Hallway</strong></span>
+              <span>Goal<strong>Water Refill Station</strong></span>
+            </div>
+          </article>
+
+          <article class="demo-card">
+            <video controls muted playsinline preload="metadata">
+              <source src="media/realworld/Office_Coffee Machine_4.5MB_HEVC.mp4" type="video/mp4" />
+            </video>
+            <div class="demo-details">
+              <span>Scene<strong>Office</strong></span>
+              <span>Goal<strong>Coffee Machine</strong></span>
+            </div>
+          </article>
+
+          <article class="demo-card">
+            <video controls muted playsinline preload="metadata">
+              <source src="media/realworld/Office_Sofa_3.4MB_HEVC.mp4" type="video/mp4" />
+            </video>
+            <div class="demo-details">
+              <span>Scene<strong>Office</strong></span>
+              <span>Goal<strong>Sofa</strong></span>
+            </div>
+          </article>
+
+          <article class="demo-card">
+            <video controls muted playsinline preload="metadata">
+              <source src="media/realworld/Classroom_Elevator_5MB_HEVC.mp4" type="video/mp4" />
+            </video>
+            <div class="demo-details">
+              <span>Scene<strong>Classroom</strong></span>
+              <span>Goal<strong>Elevator</strong></span>
+            </div>
+          </article>
+
+          <article class="demo-card">
+            <video controls muted playsinline preload="metadata">
+              <source src="media/realworld/Restroom_PottedPlant_19MB_HEVC.mp4" type="video/mp4" />
+            </video>
+            <div class="demo-details">
+              <span>Scene<strong>Restroom</strong></span>
+              <span>Goal<strong>Potted Plant</strong></span>
+            </div>
+          </article>
         </div>
       </section>
 
-      <section id="demos" aria-label="Navigation demos">
-        <div class="section-inner">
-          <div class="section-head">
-            <h2>Simulator Video Demos</h2>
-          </div>
+      <section class="section reveal" aria-labelledby="method-title">
+        <h2 class="section-heading" id="method-title">Method Overview</h2>
+        <p class="section-intro">
+          AECNav is a structured pipeline that integrates unified and efficient semantic perception, explicit spatial evidence accumulation, and active exploration for evidence-driven zero-shot ObjectNav. It consists of three tightly coupled components: evidence-gated perception derives all semantic cues from a shared encoding and invokes segmentation only when local evidence justifies it; evidence consolidation accumulates detections into a running cluster-level belief that distinguishes positive, confuser, and miss evidence; and active evidence acquisition guides exploration toward regions expected to provide the greatest new information at the lowest traversal cost.
+        </p>
+        <figure class="method-block">
+          <img src="assets/paper/architecture.png" alt="AECNav system architecture" />
+        </figure>
+      </section>
 
-          <div class="demo-player" data-carousel="simulator" data-playback-rate="1.5">
-            <div class="demo-stage">
-              <video
-                controls
-                muted
-                playsinline
-                preload="metadata"
-                src="media/demos/current_01_couch_eF36g7L6Z9M_spl074_path17m.mp4"
-                data-carousel-video
-              ></video>
-              <button
-                class="demo-arrow demo-arrow-left"
-                type="button"
-                aria-label="Previous demo video"
-                data-carousel-prev
-              >
-                <span class="arrow-shape left" aria-hidden="true"></span>
-              </button>
-              <button
-                class="demo-arrow demo-arrow-right"
-                type="button"
-                aria-label="Next demo video"
-                data-carousel-next
-              >
-                <span class="arrow-shape right" aria-hidden="true"></span>
-              </button>
-            </div>
-            <div class="demo-body">
-              <div>
-                <h3 class="demo-title" data-carousel-target>Target: couch</h3>
-              </div>
-              <div class="demo-count" data-carousel-count>Demo 1 / 9</div>
-            </div>
-            <div class="demo-controls" aria-label="Demo video selection">
-              <div class="demo-dots" data-carousel-dots></div>
-            </div>
-          </div>
+      <section class="section reveal" aria-labelledby="main-results-title">
+        <h2 class="section-heading" id="main-results-title">Main Results</h2>
+
+        <article class="result-item">
+          <h3 class="result-subheading">Comparison on Navigation Accuracy</h3>
+          <p class="result-copy">
+            AECNav achieves the highest SR and SPL across all three benchmarks without task-specific training: <strong>84.7% SR and 45.3% SPL</strong> on HM3D-v2, <strong>51.3% SR and 25.9% SPL</strong> on MP3D, and <strong>57.3% SR and 30.5% SPL</strong> on HM3D-OVON.
+          </p>
+          <figure class="result-figure wide">
+            <img src="assets/paper/results/navigation_accuracy.png" alt="Table I comparing AECNav navigation accuracy with previous methods on HM3D-v2, MP3D, and HM3D-OVON" loading="lazy" decoding="async" />
+          </figure>
+        </article>
+
+        <article class="result-item">
+          <h3 class="result-subheading">Comparison on Efficiency</h3>
+          <p class="result-copy">
+            On the first 100 HM3D-v2 episodes, AECNav averages <strong>108.63 steps and 24.39 seconds</strong> per episode&mdash;<strong>2.2&times;</strong> faster than VLFM while using <strong>33% fewer</strong> steps than the second-best ASCENT. The gain comes from information-aware exploration together with shared encoding and evidence-gated perception.
+          </p>
+          <figure class="result-figure large">
+            <img src="assets/paper/results/efficiency_comparison.png" alt="Table II comparing the steps and runtime of AECNav with previous methods on HM3D-v2" loading="lazy" decoding="async" />
+          </figure>
+        </article>
+      </section>
+
+      <section class="section reveal" aria-labelledby="ablation-title">
+        <h2 class="section-heading" id="ablation-title">Ablation Studies</h2>
+
+        <article class="result-item">
+          <h3 class="result-subheading">Ablation of Main Components</h3>
+          <p class="result-copy">
+            Removing evidence-gated perception reduces <strong>SR by 8.8 points and SPL by 8.7 points</strong>; removing evidence consolidation produces the largest SR loss, with <strong>12.8 SR points and 4.8 SPL points</strong>; and removing active evidence acquisition lowers <strong>SR by 2.9 points and SPL by 3.5 points</strong>. These results confirm that all three components contribute to navigation accuracy and efficiency.
+          </p>
+          <figure class="result-figure large">
+            <img src="assets/paper/results/ablation_components.png" alt="Table IV ablating the three core components of AECNav on HM3D-v2" loading="lazy" decoding="async" />
+          </figure>
+        </article>
+
+        <article class="result-item">
+          <h3 class="result-subheading">Ablation of Evidence Consolidation</h3>
+          <p class="result-copy">
+            Log-odds accumulation already recovers most of the benefit, while adding <strong>confuser and miss evidence</strong> yields a further 2.8-point SR gain. The two terms repair distinct failures by suppressing visually similar distractors and withdrawing stale belief when a candidate stops reappearing.
+          </p>
+          <figure class="result-figure compact">
+            <img src="assets/paper/results/ablation_evidence.png" alt="Table V ablating goal, confuser, and miss evidence in evidence consolidation on HM3D-v2" loading="lazy" decoding="async" />
+          </figure>
+        </article>
+
+        <article class="result-item">
+          <h3 class="result-subheading">Ablation of Exploration Weights</h3>
+          <p class="result-copy">
+            The <strong>traversal-cost term</strong> lifts SR from <strong>81.8% to 84.3%</strong> and SPL from <strong>41.8% to 44.3%</strong>; adding information gain raises SR as high as <strong>85.1%</strong>. Information gain alone offers almost no benefit, so AECNav uses balanced default weights of &lambda;<sub>info</sub>=1.0 and &lambda;<sub>dist</sub>=1.0 across datasets.
+          </p>
+          <figure class="result-figure large">
+            <img src="assets/paper/results/ablation_exploration_weights.png" alt="Figure 3 showing AECNav performance as the information-gain and traversal-cost weights vary" loading="lazy" decoding="async" />
+          </figure>
+        </article>
+      </section>
+
+      <section class="section reveal" aria-labelledby="deployment-results-title">
+        <h2 class="section-heading" id="deployment-results-title">Real-World Deployment</h2>
+
+        <article class="result-item">
+          <h3 class="result-subheading">Real-World Navigation Results</h3>
+          <p class="result-copy">
+            Across 40 trials covering <strong>four indoor scenes and eight open-vocabulary targets</strong>, AECNav succeeds in 38 episodes with a <strong>95% success rate</strong> and achieves full success on six targets. The evaluation spans traveled distances from 8.33 m in the office to 26.14 m in the classroom.
+          </p>
+          <figure class="result-figure medium">
+            <img src="assets/paper/results/realworld_navigation.png" alt="Table VI reporting per-target real-world navigation success, traveled distance, and traveled time" loading="lazy" decoding="async" />
+          </figure>
+        </article>
+
+        <article class="result-item">
+          <h3 class="result-subheading">Latency Analysis</h3>
+          <p class="result-copy">
+            The complete deployment pipeline averages <strong>197.4 ms per decision</strong>, sustaining a decision rate of roughly 5 Hz on the real-world robot. Planning is the largest measured stage at 72.2 ms, followed by perception at 56.3 ms.
+          </p>
+          <figure class="result-figure large">
+            <img src="assets/paper/results/realworld_latency.png" alt="Table VII breaking down AECNav real-world per-decision latency across sensing, mapping, perception, planning, and scheduling" loading="lazy" decoding="async" />
+          </figure>
+        </article>
+      </section>
+
+      <section class="section reveal" aria-labelledby="citation-title">
+        <h2 class="section-heading" id="citation-title">Citation</h2>
+        <p class="section-intro">If you find this work useful, please cite:</p>
+        <div class="citation-box">
+          <pre>@misc{liu2026aecnavactiveevidenceconsolidation,
+  title         = {AECNav: Active Evidence Consolidation for Efficient Zero-Shot Open-Vocabulary Object Navigation},
+  author        = {Guanlin Liu and Shaobin Ling and Renyuan Liu and Zeying Gong and Junjie Hu},
+  year          = {2026},
+  eprint        = {2608.10817},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.RO},
+  url           = {https://arxiv.org/abs/2608.10817}
+}</pre>
         </div>
       </section>
     </main>
 
-    <footer>
-      <div class="section-inner">
-        <span>FuseNav project page draft, May 2026.</span>
-        <span>Internal preview only. Paper, code, and citations are not finalized.</span>
-      </div>
+    <footer class="footer">
+      <div class="shell">AECNav project page · draft scaffold based on the latest paper assets</div>
     </footer>
+
     <script>
-      (() => {
-        const DEFAULT_PLAYBACK_RATE = 1.5;
-        const carouselData = {
-          realworld: [
-            {
-              src: "media/realworld/realworld_01_elevator.mp4?v=20260525audio1",
-              target: "elevator"
-            },
-            {
-              src: "media/realworld/realworld_02_trash_can.mp4?v=20260525audio1",
-              target: "trash can"
-            }
-          ],
-          simulator: [
-            {
-              src: "media/demos/current_01_couch_eF36g7L6Z9M_spl074_path17m.mp4",
-              target: "couch"
-            },
-            {
-              src: "media/demos/current_02_bed_a8BtkwhxdRV_spl066_path11m.mp4",
-              target: "bed"
-            },
-            {
-              src: "media/demos/current_03_uidhm3d_v2_val_000203_0015_Dd4bFSTQ8gi_ep0_dep1_refe3f2e0d0a6-dtg=0.22-ps=1.00-raw=0.00-spl=0.23-sspl=0.21-dgr=-0.00-stairs=0.00-yaw=150.00-det=1.00-stop=1.00-start_yaw=-2.60-ever_det=1.00-ever_stop=1.00-cause=false_positive.MP4",
-              target: "couch"
-            },
-            {
-              src: "media/demos/current_04_chair_GLAQ4DNUx5U_spl079_path8m.mp4",
-              target: "chair"
-            },
-            {
-              src: "media/demos/current_05_uidhm3d_v2_val_000003_0007_4ok3usBNeis_ep1_dep4_ref60433d27a6-dtg=0.13-ps=1.00-raw=0.00-spl=0.73-sspl=0.72-dgr=-0.00-stairs=0.00-yaw=90.00-det=1.00-stop=1.00-start_yaw=-1.64-ever_det=1.00-ever_stop=1.00-cause=false_positive.mp4",
-              target: "chair"
-            },
-            {
-              src: "media/demos/current_06_couch_y9hTuugGdiq_spl055_path30m.mp4",
-              target: "couch"
-            },
-            {
-              src: "media/demos/current_07_tv_h1zeeAwLh9Z_spl058_path21m.mp4",
-              target: "tv"
-            },
-            {
-              src: "media/demos/current_08_toilet_bCPU9suPUw9_spl091_path6m.mp4",
-              target: "toilet"
-            },
-            {
-              src: "media/demos/current_09_uidhm3d_v2_val_000219_0014_Dd4bFSTQ8gi_ep0_dep2_ref18ecebaecd.mp4",
-              target: "toilet"
-            }
-          ]
-        };
+      (function () {
+        var root = document.documentElement;
+        var themeToggle = document.getElementById("themeToggle");
+        var themeMeta = document.querySelector('meta[name="theme-color"]');
 
-        const initCarousel = (player) => {
-          const demos = carouselData[player.dataset.carousel] || [];
-          const video = player.querySelector("[data-carousel-video]");
-          const target = player.querySelector("[data-carousel-target]");
-          const count = player.querySelector("[data-carousel-count]");
-          const dots = player.querySelector("[data-carousel-dots]");
-          const previous = player.querySelector("[data-carousel-prev]");
-          const next = player.querySelector("[data-carousel-next]");
-          const playbackRate = Number(player.dataset.playbackRate) || DEFAULT_PLAYBACK_RATE;
-          let currentIndex = 0;
+        function syncThemeColor() {
+          themeMeta.setAttribute("content", root.dataset.theme === "dark" ? "#111319" : "#f5f6fa");
+        }
 
-          if (!demos.length || !video || !target || !count || !dots || !previous || !next) {
-            return;
+        themeToggle.addEventListener("click", function () {
+          var nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+          root.dataset.theme = nextTheme;
+          syncThemeColor();
+          try {
+            localStorage.setItem("aecnav-theme", nextTheme);
+          } catch (error) {
+            // Theme persistence is optional.
           }
+        });
+        syncThemeColor();
 
-          const applyPlaybackRate = () => {
-            video.defaultPlaybackRate = playbackRate;
-            video.playbackRate = playbackRate;
-          };
-
-          const playWhenReady = () => {
-            applyPlaybackRate();
-            video.play().catch(() => {});
-          };
-
-          const renderDemo = (index, shouldPlay) => {
-            currentIndex = (index + demos.length) % demos.length;
-            const demo = demos[currentIndex];
-
-            if (video.getAttribute("src") !== demo.src) {
-              video.pause();
-              video.setAttribute("src", demo.src);
-              video.load();
-            }
-
-            target.textContent = `Target: ${demo.target}`;
-            count.textContent = `Demo ${currentIndex + 1} / ${demos.length}`;
-            dotButtons.forEach((dot, dotIndex) => {
-              const isActive = dotIndex === currentIndex;
-              dot.classList.toggle("is-active", isActive);
-              if (isActive) {
-                dot.setAttribute("aria-current", "true");
-              } else {
-                dot.removeAttribute("aria-current");
+        var revealItems = document.querySelectorAll(".reveal");
+        if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
               }
             });
-            applyPlaybackRate();
-
-            if (shouldPlay) {
-              if (video.readyState >= 1) {
-                playWhenReady();
-              } else {
-                video.addEventListener("loadedmetadata", playWhenReady, { once: true });
-              }
-            }
-          };
-
-          const dotButtons = demos.map((_, index) => {
-            const dot = document.createElement("button");
-            dot.className = "demo-dot";
-            dot.type = "button";
-            dot.setAttribute("aria-label", `Show demo ${index + 1} of ${demos.length}`);
-            dot.addEventListener("click", () => renderDemo(index, true));
-            dots.appendChild(dot);
-            return dot;
+          }, { threshold: 0.08 });
+          revealItems.forEach(function (item, index) {
+            item.style.transitionDelay = Math.min(index * 35, 180) + "ms";
+            observer.observe(item);
           });
-
-          previous.addEventListener("click", () => renderDemo(currentIndex - 1, true));
-          next.addEventListener("click", () => renderDemo(currentIndex + 1, true));
-          video.addEventListener("loadedmetadata", applyPlaybackRate);
-          video.addEventListener("play", applyPlaybackRate);
-          renderDemo(0, false);
-        };
-
-        document.querySelectorAll("[data-carousel]").forEach(initCarousel);
+        } else {
+          revealItems.forEach(function (item) {
+            item.classList.add("is-visible");
+          });
+        }
       })();
     </script>
   </body>
